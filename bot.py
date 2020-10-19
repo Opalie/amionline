@@ -42,6 +42,7 @@ async def avatar(ctx, *, avamember : discord.Member = None):
 
 @bot.event
 async def on_member_update(before, after):
-  print(after.raw_status)
+    if str(after.status) == "offline":
+        print("{} has gone {}.".format(after.name,after.status))
 
 bot.run(BOT_TOKEN)
