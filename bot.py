@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 from config import BOT_TOKEN
 
-# End my misery
-
 intents = discord.Intents.default()
 intents.members = True  # Subscribe to the privileged members intent.
 client = discord.Client(intents=intents)
