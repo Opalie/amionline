@@ -2,9 +2,11 @@ import discord
 from discord.ext import commands
 from config import BOT_TOKEN
 
+# End my misery
+
 intents = discord.Intents.default()
 intents.members = True  # Subscribe to the privileged members intent.
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='$', intents=intents)
 
 # Who are you?
 
@@ -22,10 +24,6 @@ class MyBot(commands.Bot):
     async def get_context(self, message, *, cls=MyContext):
         return await super().get_context(message, cls=cls)
 
-# prefix
-
-bot = MyBot(command_prefix='$')
-
 # Ping Pong
 
 @bot.command()
@@ -42,7 +40,7 @@ async def avatar(ctx, *, avamember : discord.Member = None):
 
 # Let's try to get the bot to at least say that someone goes offline.
 
-@client.event
+@bot.event
 async def on_member_update(before, after):
   print(after.raw_status)
 
