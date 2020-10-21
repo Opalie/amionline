@@ -2,13 +2,11 @@ import discord
 from discord.ext import commands
 from config import BOT_TOKEN
 
-# End my misery
-
 intents = discord.Intents.default()
 intents.members = True  # Subscribe to the privileged members intent.
 bot = commands.Bot(command_prefix='$', intents=intents)
-
-# Who are you?
+# I was told not to use both discord.Client and commands.Bot but let's try because I'm lost
+client = discord.Client(intents=intents)
 
 class MyContext(commands.Context):
     async def tick(self, value):
@@ -18,11 +16,15 @@ class MyContext(commands.Context):
         except discord.HTTPException:
             pass
 
-# Make it not respond to itself iirc?
-
 class MyBot(commands.Bot):
     async def get_context(self, message, *, cls=MyContext):
         return await super().get_context(message, cls=cls)
+
+
+# Doesn't work
+class MyClient(discord.Client):
+    async def on_user_update(self, before, after):
+        print("{} is {}.".format(after.name,after.status))
 
 # Ping Pong
 
@@ -30,19 +32,13 @@ class MyBot(commands.Bot):
 async def hello(ctx):
     await ctx.send("Do you need anything?")
 
-# Get pinged user avatar "$avatar @user"
+# "$avatar @user"
 
 @bot.command()
 async def avatar(ctx, *, avamember : discord.Member = None):
     userAvatarUrl = avamember.avatar_url
     await ctx.send(userAvatarUrl)
 
-
-# Let's try to get the bot to at least say that someone goes offline.
-
-@bot.event
-async def on_member_update(before, after):
-    if str(after.status) == "offline":
-        print("{} has gone {}.".format(after.name,after.status))
-
+# No idea of which token to get for client, gotta have a look
+client.run()
 bot.run(BOT_TOKEN)
